@@ -127,6 +127,7 @@ export function orderView(row) {
     code: row.code,
     name: row.name,
     phone: row.phone,
+    email: row.email || '',
     address: row.address,
     boxes: row.boxes,
     unit_price: row.unit_price,

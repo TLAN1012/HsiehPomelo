@@ -89,6 +89,7 @@
       <div class="grid">
         <span>收件人</span><span>${esc(o.name)}</span>
         <span>電話</span><span>${esc(o.phone)}</span>
+        <span>Email</span><span>${esc(o.email || "未提供")}</span>
         <span>地址</span><span>${esc(o.address)}</span>
         <span>數量</span><span>${o.boxes} 箱 × ${money(o.unit_price)}</span>
         <span>運費</span><span>${money(o.shipping_fee)}</span>
@@ -116,10 +117,12 @@
     const payload = {
       name: $('name').value.trim(),
       phone: $('phone').value.trim(),
+      email: $('email').value.trim(),
       address: $('address').value.trim(),
       boxes: clampBoxes(),
       note: $('note').value.trim(),
     };
+    if (!payload.email || payload.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) return showMsg($('order-msg'), '請填寫正確的 Email', 'err');
     if (!payload.name) return showMsg($('order-msg'), '請填寫收件人姓名', 'err');
     if (!/^[\d+\-\s()]{8,}$/.test(payload.phone)) return showMsg($('order-msg'), '請填寫正確的聯絡電話', 'err');
     if (payload.address.length < 6) return showMsg($('order-msg'), '請填寫完整的收件地址', 'err');
@@ -137,8 +140,8 @@
       $('boxes').value = 1;
       await loadStatus();
     } catch (e) {
-      showMsg($('order-msg'), e.message, 'err');
       await loadStatus();
+      showMsg($('order-msg'), e.message, 'err');
     } finally {
       btn.textContent = '送出訂單';
       btn.disabled = settings ? (!settings.order_open || settings.stock <= 0) : false;

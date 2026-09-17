@@ -16,8 +16,8 @@ export async function onRequestGet({ request, env }) {
     binds.push(status);
   }
   if (q) {
-    where.push('(code LIKE ? OR phone LIKE ? OR name LIKE ?)');
-    binds.push(`%${q.toUpperCase()}%`, `%${q}%`, `%${q}%`);
+    where.push('(code LIKE ? OR phone LIKE ? OR name LIKE ? OR email LIKE ?)');
+    binds.push(`%${q.toUpperCase()}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
   if (where.length) sql += ' WHERE ' + where.join(' AND ');
   sql += ' ORDER BY created_at DESC LIMIT 500';

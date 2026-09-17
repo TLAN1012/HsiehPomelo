@@ -9,6 +9,10 @@ export async function onRequestPost({ request, env }) {
 
   const name = String(body.name || '').trim();
   const phone = normalizePhone(body.phone);
+  const email = typeof body.email === 'string' ? body.email.trim() : '';
+  if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return error('請填寫正確的 Email');
+  }
   const address = String(body.address || '').trim();
   const note = String(body.note || '').trim().slice(0, 500);
   const boxes = toInt(body.boxes, 0);
@@ -31,11 +35,11 @@ export async function onRequestPost({ request, env }) {
     const code = generateCode();
     const results = await env.DB.batch([
       env.DB.prepare(
-        `INSERT INTO orders (code, name, phone, address, boxes, unit_price, shipping_fee, total, note)
-         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+        `INSERT INTO orders (code, name, phone, email, address, boxes, unit_price, shipping_fee, total, note)
+         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
          WHERE (SELECT CAST(value AS INTEGER) FROM settings WHERE key = 'stock') >= ?
            AND (SELECT value FROM settings WHERE key = 'order_open') <> '0'`
-      ).bind(code, name, phone, address, boxes, s.unit_price, shipping, total, note, boxes),
+      ).bind(code, name, phone, email, address, boxes, s.unit_price, shipping, total, note, boxes),
       env.DB.prepare(
         `UPDATE settings SET value = CAST(value AS INTEGER) - ?
          WHERE key = 'stock' AND EXISTS (SELECT 1 FROM orders WHERE code = ?)`

@@ -106,12 +106,13 @@
   }
 
   function renderOrders(orders) {
-    if (!orders.length) { $('orders-body').innerHTML = '<tr><td colspan="10" class="muted">沒有訂單</td></tr>'; return; }
+    if (!orders.length) { $('orders-body').innerHTML = '<tr><td colspan="11" class="muted">沒有訂單</td></tr>'; return; }
     $('orders-body').innerHTML = orders.map((o) => `<tr data-code="${esc(o.code)}">
       <td><code>${esc(o.code)}</code></td>
       <td>${esc(fmtTime(o.created_at))}</td>
       <td>${esc(o.name)}</td>
       <td><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></td>
+      <td>${esc(o.email || "未提供")}</td>
       <td>${esc(o.address)}</td>
       <td>${o.boxes}</td>
       <td>${money(o.total)}</td>
@@ -146,9 +147,9 @@
   let t; $('f-q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(loadOrders, 300); });
 
   $('export').addEventListener('click', () => {
-    const head = ['代碼', '下單時間', '收件人', '電話', '地址', '箱數', '單價', '運費', '合計', '備註', '狀態'];
+    const head = ['代碼', '下單時間', '收件人', '電話', 'Email', '地址', '箱數', '單價', '運費', '合計', '備註', '狀態'];
     const rows = currentOrders.map((o) => [
-      o.code, fmtTime(o.created_at), o.name, o.phone, o.address, o.boxes, o.unit_price, o.shipping_fee, o.total, o.note, STATUS_LABEL[o.status] || o.status,
+      o.code, fmtTime(o.created_at), o.name, o.phone, o.email, o.address, o.boxes, o.unit_price, o.shipping_fee, o.total, o.note, STATUS_LABEL[o.status] || o.status,
     ]);
     const csv = [head, ...rows].map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });

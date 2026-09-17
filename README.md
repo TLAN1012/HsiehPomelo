@@ -8,7 +8,7 @@
 
 正式資料庫已建立並綁定。日後更新只需在專案目錄執行 `npm ci`、`npm run deploy`；不必重新建立資料庫。管理密碼保存在 Cloudflare secret，不在 GitHub 程式碼中。
 
-- 訂購頁 `/`：顯示目前可訂購箱數、單價與運費，填寫姓名／電話／地址下單，完成後取得訂單代碼與匯款資訊。
+- 訂購頁 `/`：顯示目前可訂購箱數、單價與運費，填寫姓名／電話／Email／地址下單，完成後取得訂單代碼與匯款資訊。
 - 查詢：在訂購頁下方輸入訂單代碼（`HP-XXXXXX`）或電話即可查詢訂單狀態。
 - 管理後台 `/admin`：密碼登入後可調整庫存、單價、運費、接單狀態、公告、匯款資訊，並查看所有訂單、變更狀態（待匯款／已收款／已出貨／已取消）、匯出 CSV。
 
@@ -83,3 +83,9 @@ npm run dev                        # http://localhost:8788
 | GET / PUT | `/api/admin/settings` | 讀取／更新設定 |
 | GET | `/api/admin/orders?status=&q=` | 訂單列表與統計 |
 | PATCH / DELETE | `/api/admin/orders/:code` | 變更狀態（取消會退回庫存）／刪除 |
+
+## Email 欄位更新
+
+新訂單必填 Email，前後端均檢查格式，後台可查看、搜尋及匯出 Email。既有訂單保留，未填寫者顯示「未提供」。此欄位用於聯絡資料登記，目前不會自動寄信。
+
+更新已有資料庫時，先執行 `npm run db:migrate:remote` 套用新增欄位，再執行 `npm run deploy`。
