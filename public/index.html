@@ -4,21 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>謝家老欉紅文旦｜產地直送訂購</title>
-  <meta name="description" content="謝家老欉紅文旦，一箱十斤 800 元（不含運）。線上下單、匯款、訂單查詢。">
+  <meta name="description" content="謝家老欉紅文旦，產地直送，一箱十斤。線上訂購登記與訂單查詢。">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍊</text></svg>">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<header class="hero">
-  <div class="wrap">
-    <h1>謝家老欉紅文旦</h1>
-    <p class="sub">老欉果樹、產地直送｜一箱十斤 NT$800（運費另計）</p>
+<body class="storefront">
+<a class="skip-link" href="#order-card">跳至訂購表單</a>
+<nav class="site-nav wrap" aria-label="主要導覽">
+  <a class="brand" href="/" aria-label="謝家紅文旦首頁"><span class="brand-mark">謝</span><span>謝家紅文旦<small>HSIEH POMELO</small></span></a>
+  <a class="nav-link" href="#lookup-card">訂單查詢 <span aria-hidden="true">↗</span></a>
+</nav>
+<header class="orchard-hero wrap">
+  <div class="hero-copy">
+    <p class="eyebrow"><span></span> 謝家老欉・產地直送</p>
+    <h1>把一份柚香，<br>送進日常。</h1>
+    <p class="hero-description">剝開一顆紅文旦，和喜歡的人慢慢分享。<br>謝家的老欉滋味，從產地送到你手中。</p>
+    <a class="primary-link" href="#order-card">登記訂購 <span aria-hidden="true">↗</span></a>
+    <div class="hero-meta"><span>老欉紅文旦</span><i></i><span>每箱 10 斤</span><i></i><span>線上登記</span></div>
+  </div>
+  <div class="hero-art">
+    <span class="art-caption">一瓣柚香，一份心意。</span>
+    <img src="/pomelo.svg" alt="紅文旦與柚葉的插畫" width="640" height="540" fetchpriority="high">
+    <span class="art-seal">謝家<br>老欉</span>
+    <span class="art-footnote">紅文旦插畫</span>
   </div>
 </header>
-
-<main class="wrap">
+<main class="wrap shop-main">
+  <div class="section-heading"><div><p class="eyebrow">FROM OUR ORCHARD</p><h2>一箱好滋味，慢慢分享。</h2></div><p>選好箱數，留下收件資料，<br>就能完成訂購登記。</p></div>
+  <div class="shop-grid">
+  <aside class="product-sidebar">
   <section class="card" id="stock-card">
-    <h2>目前可訂購數量</h2>
+    <p class="eyebrow">謝家老欉</p><h2>紅文旦・十斤裝</h2><p class="product-description">與家人一起享用，也把心意送給遠方的人。</p><div class="stock-label">目前可訂購數量</div>
     <div class="stock" id="stock">
       <span class="num" id="stock-num">…</span><span class="unit">箱（每箱 10 斤）</span>
     </div>
@@ -29,15 +45,21 @@
     <div class="notice hidden" id="notice"></div>
   </section>
 
+  <div class="how-it-works"><h3>訂購很簡單</h3><ol><li><span>01</span><div><strong>填寫訂購資料</strong><p>選擇箱數，確認收件資訊。</p></div></li><li><span>02</span><div><strong>保留訂單代碼</strong><p>完成登記後，可隨時查詢進度。</p></div></li><li><span>03</span><div><strong>確認付款與出貨</strong><p>依訂單資訊匯款，由我們人工確認。</p></div></li></ol></div>
+  </aside>
+  <div class="order-column">
   <section class="card" id="order-card">
-    <h2>線上訂購</h2>
+    <div class="form-heading"><div><p class="eyebrow">RESERVE YOUR BOX</p><h2>訂購登記</h2></div><span class="form-tag">每箱 10 斤</span></div><p class="form-intro">請留下正確的聯絡與收件資訊。備註以外皆為必填。</p>
     <form id="order-form" novalidate>
+      <div class="contact-grid"><div>
       <label for="name">收件人姓名</label>
       <input id="name" name="name" maxlength="50" autocomplete="name" required>
 
-      <label for="phone">聯絡電話 <small>（同時作為查詢訂單的依據）</small></label>
+      </div><div>
+      <label for="phone">聯絡電話 <small>（可查詢訂單）</small></label>
       <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0912345678" required>
 
+      </div></div>
       <label for="email">Email（必填）</label>
       <input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com" required>
 
@@ -61,7 +83,7 @@
         <span class="total">合計</span><span class="total" id="sum-total">NT$900</span>
       </div>
 
-      <div class="msg" id="order-msg"></div>
+      <div class="msg" id="order-msg" role="status" aria-live="polite"></div>
       <div class="actions">
         <button type="submit" id="submit-btn">送出訂單</button>
       </div>
@@ -82,17 +104,19 @@
     </div>
   </section>
 
+  </div>
+  </div>
   <section class="card" id="lookup-card">
-    <h2>查詢訂單</h2>
+    <div class="lookup-heading"><div><p class="eyebrow">YOUR ORDER</p><h2>惦記著你的那箱文旦？</h2></div><p class="muted">輸入訂單代碼或電話，查看目前進度。</p></div>
     <form id="lookup-form" class="row" novalidate>
-      <input id="lookup-q" placeholder="輸入訂單代碼（HP-XXXXXX）或電話" autocomplete="off">
+      <input aria-label="訂單代碼或電話" id="lookup-q" placeholder="輸入訂單代碼（HP-XXXXXX）或電話" autocomplete="off">
       <button type="submit" style="flex:0 0 auto">查詢</button>
     </form>
-    <div class="msg" id="lookup-msg"></div>
+    <div class="msg" id="lookup-msg" role="status" aria-live="polite"></div>
     <div id="lookup-results"></div>
   </section>
 
-  <footer>謝家老欉紅文旦 ・ 有任何問題請直接聯絡我們</footer>
+  <footer><a class="footer-brand" href="/">謝家老欉紅文旦</a><span>一瓣柚香，一份心意。</span><span class="footer-note">產地直送 · 每箱十斤</span></footer>
 </main>
 <script src="/app.js"></script>
 </body>

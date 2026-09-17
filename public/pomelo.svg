@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="540" viewBox="0 0 640 540">
+<defs>
+ <radialGradient id="rind" cx="35%" cy="25%" r="80%"><stop stop-color="#e4df93"/><stop offset=".6" stop-color="#c1c36b"/><stop offset="1" stop-color="#949f50"/></radialGradient>
+ <radialGradient id="flesh"><stop stop-color="#f9bbb0"/><stop offset=".72" stop-color="#ed9288"/><stop offset="1" stop-color="#d77570"/></radialGradient>
+ <pattern id="speckle" width="17" height="19" patternUnits="userSpaceOnUse"><circle cx="4" cy="5" r=".8" fill="#717836" opacity=".21"/><circle cx="12" cy="15" r=".6" fill="#fff8c5" opacity=".45"/></pattern>
+ <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="13"/></filter>
+ <path id="segment" d="M0,-9 C-9,-22 -21,-80 -19,-103 Q0,-116 22,-102 C22,-71 8,-22 0,-9Z"/>
+ <g id="veins" stroke="#ffd9c9" stroke-width="1.5" opacity=".58"><path d="M0,-18L1,-100M-3,-31L-11,-99M4,-30L13,-98M-7,-55L-16,-96M8,-54L18,-95"/></g>
+</defs>
+<ellipse cx="326" cy="437" rx="206" ry="24" fill="#516439" opacity=".17" filter="url(#shadow)"/>
+<path d="M365 186Q404 85 493 69" fill="none" stroke="#6b7546" stroke-width="7" stroke-linecap="round"/>
+<path d="M405 126Q390 28 309 44Q316 127 405 126Z" fill="#385b46"/>
+<path d="M406 122L329 60" stroke="#839578" stroke-width="2" fill="none"/>
+<path d="M426 106Q452 29 532 56Q510 129 426 106Z" fill="#527650"/>
+<path d="M436 100L512 64" stroke="#9aaa80" stroke-width="2"/>
+<path d="M331 173C331 146 365 138 383 153C397 166 398 180 415 191C466 223 487 266 482 326C479 394 427 437 355 441C282 444 228 400 225 333C222 267 243 231 292 198C312 185 326 185 331 173Z" fill="url(#rind)"/>
+<path d="M331 173C331 146 365 138 383 153C397 166 398 180 415 191C466 223 487 266 482 326C479 394 427 437 355 441C282 444 228 400 225 333C222 267 243 231 292 198C312 185 326 185 331 173Z" fill="url(#speckle)"/>
+<path d="M351 158Q350 142 360 130" fill="none" stroke="#6c6e3f" stroke-width="8" stroke-linecap="round"/>
+<g transform="translate(245 342) rotate(-17)">
+ <ellipse rx="144" ry="135" fill="#a7ae60"/>
+ <ellipse rx="136" ry="129" fill="#faf0d6"/>
+ <ellipse rx="119" ry="116" fill="#ffdec9"/>
+ <g fill="url(#flesh)">
+ <use href="#segment"/><use href="#segment" transform="rotate(36)"/><use href="#segment" transform="rotate(72)"/><use href="#segment" transform="rotate(108)"/><use href="#segment" transform="rotate(144)"/><use href="#segment" transform="rotate(180)"/><use href="#segment" transform="rotate(216)"/><use href="#segment" transform="rotate(252)"/><use href="#segment" transform="rotate(288)"/><use href="#segment" transform="rotate(324)"/>
+ </g>
+ <use href="#veins"/><use href="#veins" transform="rotate(36)"/><use href="#veins" transform="rotate(72)"/><use href="#veins" transform="rotate(108)"/><use href="#veins" transform="rotate(144)"/><use href="#veins" transform="rotate(180)"/><use href="#veins" transform="rotate(216)"/><use href="#veins" transform="rotate(252)"/><use href="#veins" transform="rotate(288)"/><use href="#veins" transform="rotate(324)"/>
+ <circle r="10" fill="#fff0d8"/>
+</g>
+<path d="M402 458Q460 402 520 425Q497 476 402 458Z" fill="#42664c"/>
+<path d="M412 455L504 433" stroke="#8a9e77" stroke-width="2"/>
+</svg>
