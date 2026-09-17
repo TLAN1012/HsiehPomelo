@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>謝家老欉紅文旦｜產地直送訂購</title>
+  <meta name="description" content="謝家老欉紅文旦，一箱十斤 800 元（不含運）。線上下單、匯款、訂單查詢。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍊</text></svg>">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>謝家老欉紅文旦</h1>
+    <p class="sub">老欉果樹、產地直送｜一箱十斤 NT$800（運費另計）</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card" id="stock-card">
+    <h2>目前可訂購數量</h2>
+    <div class="stock" id="stock">
+      <span class="num" id="stock-num">…</span><span class="unit">箱（每箱 10 斤）</span>
+    </div>
+    <div class="price-row">
+      <span>單價 <b id="unit-price">NT$800</b> / 箱</span>
+      <span>運費 <b id="shipping-fee">NT$100</b> <span id="shipping-mode">/ 箱</span></span>
+    </div>
+    <div class="notice hidden" id="notice"></div>
+  </section>
+
+  <section class="card" id="order-card">
+    <h2>線上訂購</h2>
+    <form id="order-form" novalidate>
+      <label for="name">收件人姓名</label>
+      <input id="name" name="name" maxlength="50" autocomplete="name" required>
+
+      <label for="phone">聯絡電話 <small>（同時作為查詢訂單的依據）</small></label>
+      <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0912345678" required>
+
+      <label for="address">收件地址</label>
+      <textarea id="address" name="address" maxlength="200" autocomplete="street-address" placeholder="請填寫含縣市、鄉鎮區的完整地址" required></textarea>
+
+      <label for="boxes">訂購箱數</label>
+      <div class="qty">
+        <button type="button" class="ghost" id="qty-minus" aria-label="減少">−</button>
+        <input id="boxes" name="boxes" type="number" inputmode="numeric" min="1" value="1" required>
+        <button type="button" class="ghost" id="qty-plus" aria-label="增加">＋</button>
+        <span class="muted">箱</span>
+      </div>
+
+      <label for="note">備註 <small>（選填，例如指定到貨時間）</small></label>
+      <textarea id="note" name="note" maxlength="500"></textarea>
+
+      <div class="summary">
+        <span>文旦 <span id="sum-boxes">1</span> 箱 × <span id="sum-unit">800</span></span><span id="sum-goods">NT$800</span>
+        <span>運費</span><span id="sum-ship">NT$100</span>
+        <span class="total">合計</span><span class="total" id="sum-total">NT$900</span>
+      </div>
+
+      <div class="msg" id="order-msg"></div>
+      <div class="actions">
+        <button type="submit" id="submit-btn">送出訂單</button>
+      </div>
+      <p class="muted">送出後會顯示訂單代碼與匯款資訊，請保留代碼以便查詢。匯款後我們會人工確認並安排出貨。</p>
+    </form>
+  </section>
+
+  <section class="card hidden" id="done-card">
+    <h2>訂單已成立</h2>
+    <p>謝謝您的訂購！請記下您的訂單代碼：</p>
+    <div class="code-box"><div class="code" id="done-code"></div><div class="muted">也可以用您的電話號碼查詢</div></div>
+    <div id="done-detail"></div>
+    <h2 style="margin-top:18px">匯款資訊</h2>
+    <dl class="bank" id="done-bank"></dl>
+    <p class="muted">匯款時請於備註填寫訂單代碼或電話末三碼，方便我們對帳。</p>
+    <div class="actions">
+      <button type="button" class="ghost" id="done-again">再訂一筆</button>
+    </div>
+  </section>
+
+  <section class="card" id="lookup-card">
+    <h2>查詢訂單</h2>
+    <form id="lookup-form" class="row" novalidate>
+      <input id="lookup-q" placeholder="輸入訂單代碼（HP-XXXXXX）或電話" autocomplete="off">
+      <button type="submit" style="flex:0 0 auto">查詢</button>
+    </form>
+    <div class="msg" id="lookup-msg"></div>
+    <div id="lookup-results"></div>
+  </section>
+
+  <footer>謝家老欉紅文旦 ・ 有任何問題請直接聯絡我們</footer>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

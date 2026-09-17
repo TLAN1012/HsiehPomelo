@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>管理後台｜謝家老欉紅文旦</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>管理後台</h1>
+    <p class="sub">謝家老欉紅文旦 ・ <a href="/">回訂購頁</a></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card" id="login-card">
+    <h2>登入</h2>
+    <form id="login-form" class="row">
+      <input id="password" type="password" placeholder="管理密碼" autocomplete="current-password">
+      <button type="submit" style="flex:0 0 auto">登入</button>
+    </form>
+    <div class="msg" id="login-msg"></div>
+  </section>
+
+  <div id="panel" class="hidden">
+    <section class="card">
+      <h2>庫存與販售設定</h2>
+      <form id="settings-form">
+        <div class="row">
+          <div><label for="s-stock">目前可售箱數</label><input id="s-stock" type="number" min="0"></div>
+          <div><label for="s-max">每單最多箱數</label><input id="s-max" type="number" min="1"></div>
+        </div>
+        <div class="row">
+          <div><label for="s-price">單價（元/箱）</label><input id="s-price" type="number" min="0"></div>
+          <div><label for="s-ship">運費（元）</label><input id="s-ship" type="number" min="0"></div>
+          <div><label for="s-mode">運費計算</label>
+            <select id="s-mode"><option value="per_box">每箱收一次</option><option value="per_order">每筆訂單收一次</option></select></div>
+        </div>
+        <label for="s-open">接單狀態</label>
+        <select id="s-open"><option value="1">開放訂購</option><option value="0">暫停接單</option></select>
+        <label for="s-notice">公告 <small>（顯示在訂購頁最上方，留白則不顯示）</small></label>
+        <textarea id="s-notice" placeholder="例如：本季預計 10 月初開始出貨"></textarea>
+
+        <h2 style="margin-top:20px">匯款資訊</h2>
+        <div class="row">
+          <div><label for="s-bank-name">銀行</label><input id="s-bank-name"></div>
+          <div><label for="s-bank-branch">分行</label><input id="s-bank-branch"></div>
+        </div>
+        <div class="row">
+          <div><label for="s-bank-account">帳號</label><input id="s-bank-account"></div>
+          <div><label for="s-bank-holder">戶名</label><input id="s-bank-holder"></div>
+        </div>
+        <div class="msg" id="settings-msg"></div>
+        <div class="actions"><button type="submit">儲存設定</button></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>訂單</h2>
+      <div class="stats" id="stats"></div>
+      <div class="toolbar">
+        <select id="f-status">
+          <option value="">全部狀態</option>
+          <option value="pending">待匯款</option>
+          <option value="paid">已收款</option>
+          <option value="shipped">已出貨</option>
+          <option value="cancelled">已取消</option>
+        </select>
+        <input id="f-q" placeholder="搜尋代碼 / 電話 / 姓名">
+        <button type="button" class="ghost" id="reload">重新整理</button>
+        <button type="button" class="ghost" id="export">匯出 CSV</button>
+      </div>
+      <div class="msg" id="orders-msg"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>代碼</th><th>時間</th><th>收件人</th><th>電話</th><th>地址</th><th>箱數</th><th>合計</th><th>備註</th><th>狀態</th><th></th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="actions"><button type="button" class="ghost" id="logout">登出</button></div>
+  </div>
+</main>
+<script src="/admin.js"></script>
+</body>
+</html>
