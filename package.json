@@ -7,9 +7,9 @@
     "dev": "wrangler pages dev --persist-to .wrangler/state",
     "db:migrate:local": "wrangler d1 migrations apply hsieh-pomelo --local --persist-to .wrangler/state",
     "db:migrate:remote": "wrangler d1 migrations apply hsieh-pomelo --remote",
-    "deploy": "wrangler pages deploy public"
+    "deploy": "wrangler pages deploy public --project-name hsieh-pomelo --branch main"
   },
   "devDependencies": {
-    "wrangler": "^3.90.0"
+    "wrangler": "^4.134.0"
   }
 }

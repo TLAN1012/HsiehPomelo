@@ -2,6 +2,12 @@
 
 公開的紅文旦訂購網站，架在 Cloudflare Pages（靜態頁 + Pages Functions）與 D1 資料庫上。
 
+正式網站：https://hsieh-pomelo.pages.dev/
+
+管理後台：https://hsieh-pomelo.pages.dev/admin
+
+正式資料庫已建立並綁定。日後更新只需在專案目錄執行 `npm ci`、`npm run deploy`；不必重新建立資料庫。管理密碼保存在 Cloudflare secret，不在 GitHub 程式碼中。
+
 - 訂購頁 `/`：顯示目前可訂購箱數、單價與運費，填寫姓名／電話／地址下單，完成後取得訂單代碼與匯款資訊。
 - 查詢：在訂購頁下方輸入訂單代碼（`HP-XXXXXX`）或電話即可查詢訂單狀態。
 - 管理後台 `/admin`：密碼登入後可調整庫存、單價、運費、接單狀態、公告、匯款資訊，並查看所有訂單、變更狀態（待匯款／已收款／已出貨／已取消）、匯出 CSV。
@@ -20,7 +26,9 @@ wrangler.toml      Cloudflare 設定
 
 ## 部署到 Cloudflare（第一次）
 
-需要一個 Cloudflare 帳號與 Node.js 18 以上。
+需要一個 Cloudflare 帳號與 Node.js 22 以上。
+
+目前網站程式碼在 `claude/pomelo-sales-website-1mvnf4` 分支；若從 GitHub 下載，請先選擇這個分支。`main` 尚未包含網站程式碼。
 
 ```bash
 npm install
@@ -32,15 +40,19 @@ npx wrangler d1 create hsieh-pomelo
 # 2. 建立資料表與初始設定
 npm run db:migrate:remote
 
-# 3. 建立 Pages 專案並部署
+# 3. 建立 Pages 專案
 npx wrangler pages project create hsieh-pomelo --production-branch main
-npm run deploy
 
-# 4. 設定管理後台密碼（只需一次）
+# 4. 設定管理後台密碼（只需一次，輸入時不會顯示）
 npx wrangler pages secret put ADMIN_PASSWORD --project-name hsieh-pomelo
+
+# 5. 發布正式網站
+npm run deploy
 ```
 
 部署完成後 wrangler 會印出網址（`https://hsieh-pomelo.pages.dev`）。之後每次改完程式再跑 `npm run deploy` 即可。
+
+`npm run deploy` 已指定正式環境分支 `main`，因此從目前的開發分支執行也會發布正式網站。這不會自動合併 GitHub 分支。
 
 也可以改用 Cloudflare Dashboard 連結這個 GitHub repo 自動部署：Workers & Pages → Create → Pages → Connect to Git，
 Build output directory 填 `public`，然後在專案 Settings 裡綁定 D1（變數名稱 `DB`）並新增 secret `ADMIN_PASSWORD`。

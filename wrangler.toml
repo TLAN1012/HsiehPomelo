@@ -7,7 +7,7 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "hsieh-pomelo"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "5f8cffbd-d007-467b-ad44-aff660a2d065"
 migrations_dir = "migrations"
 
 # 管理頁密碼請用 secret 設定，不要寫在這裡：
