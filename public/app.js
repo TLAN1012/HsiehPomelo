@@ -131,6 +131,11 @@
     try {
       const data = await api('/api/orders', { method: 'POST', body: JSON.stringify(payload) });
       $('done-code').textContent = data.order.code;
+      $('done-email').textContent = data.email_status === 'accepted'
+        ? `確認信已安排寄送至 ${data.order.email}，若未收到請查看垃圾郵件。`
+        : data.email_status === 'failed'
+          ? '訂單已成立，但確認信寄送未完成。請保留訂單代碼，不必重複下單。'
+          : '請保留訂單代碼，以便之後查詢。';
       $('done-detail').innerHTML = orderHtml(data.order);
       $('done-bank').innerHTML = bankDl(data.bank);
       $('order-card').classList.add('hidden');

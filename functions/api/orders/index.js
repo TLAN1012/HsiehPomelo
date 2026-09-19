@@ -1,3 +1,4 @@
+import { sendOrderEmail } from '../../../src/send-order-email.js';
 import {
   json, error, readJson, getSettings, bankInfo, calcShipping,
   generateCode, normalizePhone, toInt, orderView,
@@ -58,7 +59,8 @@ export async function onRequestPost({ request, env }) {
     }
 
     const row = await env.DB.prepare('SELECT * FROM orders WHERE code = ?').bind(code).first();
-    return json({ ok: true, order: orderView(row), bank: bankInfo(s) }, 201);
+    const emailStatus = await sendOrderEmail(env, row, s);
+    return json({ ok: true, order: orderView(row), bank: bankInfo(s), email_status: emailStatus }, 201);
   }
 
   return error('系統忙碌，請再試一次', 503);

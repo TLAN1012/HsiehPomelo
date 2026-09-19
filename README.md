@@ -86,6 +86,14 @@ npm run dev                        # http://localhost:8788
 
 ## Email 欄位更新
 
-新訂單必填 Email，前後端均檢查格式，後台可查看、搜尋及匯出 Email。既有訂單保留，未填寫者顯示「未提供」。此欄位用於聯絡資料登記，目前不會自動寄信。
+新訂單必填 Email，前後端均檢查格式，後台可查看、搜尋及匯出 Email。既有訂單保留，未填寫者顯示「未提供」。Google 寄信服務設定完成後，新訂單會自動寄出登記確認信；未設定時仍可正常登記。
 
 更新已有資料庫時，先執行 `npm run db:migrate:remote` 套用新增欄位，再執行 `npm run deploy`。
+
+## 自動寄訂單確認信
+
+使用 Gmail／Google Apps Script；設定流程見 [串接說明](integrations/google-apps-script/README.md)。正式環境需設定 `GOOGLE_MAIL_URL` 和 `POMELO_MAIL_SECRET` 兩個 Cloudflare secrets。驗證密鑰不放進 GitHub。
+
+確認信包含訂單代碼、箱數、金額及查詢連結。若匯款資料仍是預設提示，不會寄出未填寫的匯款帳號。Google 接受寄送後，頁面提示已安排寄信；失敗時明確提示訂單已成立、不必重複下單。寄信失敗不會回滾訂單或再次扣庫存，不補寄歷史訂單。
+
+測試：`node --test tests/*.test.mjs`（使用模擬寄信服務，不寄真實郵件）。
