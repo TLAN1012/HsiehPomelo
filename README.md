@@ -10,7 +10,10 @@
 npm start   # 等同 python3 -m http.server 8000，再開啟 http://localhost:8000
 ```
 
-也可以直接用 GitHub Pages 發佈這個 repo。
+線上版（GitHub Pages）：https://tlan1012.github.io/HsiehPomelo/
+
+每次推送到 `main`，`.github/workflows/pages.yml` 會先跑測試，再自動部署到 GitHub Pages。
+第一次使用前需要到 repo 的 **Settings → Pages**，把 **Source** 設為 **GitHub Actions**。
 
 ## 功能
 
