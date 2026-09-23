@@ -39,6 +39,8 @@ jobs:
         run: |
           mkdir _site
           cp -r index.html css js _site/
+          # 讓瀏覽器在每次部署後載入新的 CSS／JS，而不是沿用舊的快取
+          sed -i "s/?v=dev/?v=${GITHUB_SHA::8}/g" _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
       - id: deployment
