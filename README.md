@@ -26,6 +26,10 @@ npm start   # 等同 python3 -m http.server 8000，再開啟 http://localhost:80
 - **題數**：10／20／50 題、每字一輪（答錯的字會再出現直到答對），或不限
 - **加權出題**：常答錯或還沒練過的字會比較常出現
 - **發音**：使用瀏覽器內建的語音合成唸出讀音（需系統有日文語音）
+- **習字帖**
+  - 播放筆順動畫，並逐筆顯示筆順（紅色為目前這一筆，圓點為起筆處）
+  - 用手指、觸控筆或滑鼠在十字格上描寫，可切換描紅範本與筆畫編號，支援復原與清除
+  - 列印 A4 習字帖：每個字一行，含筆順範本、描紅格與空白練習格
 - **五十音表**：點字母聽讀音，並用顏色標示你每個字的答對率
 - 作答紀錄與設定存在瀏覽器的 localStorage
 
@@ -39,4 +43,11 @@ npm test    # 以 Node 內建測試執行 test/*.test.js
 
 - `js/kana.js`：假名資料與出題邏輯（不依賴 DOM）
 - `js/app.js`：畫面與互動
+- `js/write.js`：習字帖（手寫板、筆順動畫、列印）
+- `js/strokes.js`：筆順資料，由 `node scripts/build-strokes.js` 從 KanjiVG 產生
 - `css/style.css`：樣式（支援深色模式）
+
+## 授權與資料來源
+
+筆順資料取自 [KanjiVG](https://kanjivg.tagaini.net)（Copyright © 2009–2011 Ulrich Apel），
+依 [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) 授權使用；`js/strokes.js` 亦以相同授權釋出。
