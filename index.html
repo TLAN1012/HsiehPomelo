@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>假名練習</title>
+  <meta name="description" content="日文平假名、片假名字母練習">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="brand"><span lang="ja">かな</span> 假名練習</h1>
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab is-active" data-view="setup" role="tab">練習</button>
+      <button type="button" class="tab" data-view="chart" role="tab">五十音表</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 設定 -->
+    <section id="view-setup" class="view">
+      <div class="card">
+        <h2>文字</h2>
+        <div class="segmented" id="opt-script">
+          <label><input type="radio" name="script" value="hira" checked><span>平假名 <span lang="ja">あ</span></span></label>
+          <label><input type="radio" name="script" value="kata"><span>片假名 <span lang="ja">ア</span></span></label>
+          <label><input type="radio" name="script" value="both"><span>混合</span></label>
+        </div>
+
+        <h2>題型</h2>
+        <div class="segmented segmented--stack" id="opt-mode">
+          <label><input type="radio" name="mode" value="type" checked><span>看假名，輸入羅馬拼音</span></label>
+          <label><input type="radio" name="mode" value="pick-romaji"><span>看假名，選羅馬拼音</span></label>
+          <label><input type="radio" name="mode" value="pick-kana"><span>看羅馬拼音，選假名</span></label>
+        </div>
+
+        <h2>題數</h2>
+        <div class="segmented" id="opt-count">
+          <label><input type="radio" name="count" value="10"><span>10</span></label>
+          <label><input type="radio" name="count" value="20" checked><span>20</span></label>
+          <label><input type="radio" name="count" value="50"><span>50</span></label>
+          <label><input type="radio" name="count" value="round"><span>每字一輪</span></label>
+          <label><input type="radio" name="count" value="endless"><span>不限</span></label>
+        </div>
+        <p class="hint" id="count-hint"></p>
+
+        <label class="toggle"><input type="checkbox" id="opt-speak"> 答題後自動唸出讀音</label>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>練習範圍</h2>
+          <span class="pool-size" id="pool-size"></span>
+        </div>
+        <div id="row-picker"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary btn-lg" id="btn-start">開始練習</button>
+      </div>
+    </section>
+
+    <!-- 作答 -->
+    <section id="view-quiz" class="view" hidden>
+      <div class="quiz-status">
+        <span id="quiz-progress-text"></span>
+        <span id="quiz-score"></span>
+      </div>
+      <div class="progress"><div class="progress-bar" id="quiz-progress"></div></div>
+
+      <div class="card quiz-card">
+        <div class="prompt-tag" id="prompt-tag"></div>
+        <div class="prompt" id="prompt"></div>
+        <button type="button" class="btn-icon" id="btn-speak" title="唸出讀音" aria-label="唸出讀音">🔊</button>
+
+        <form id="type-form" class="type-form" autocomplete="off">
+          <input id="type-input" type="text" lang="en" autocapitalize="off" autocorrect="off"
+                 spellcheck="false" placeholder="輸入羅馬拼音" aria-label="羅馬拼音">
+          <button type="submit" class="btn btn-primary" id="btn-check">確認</button>
+        </form>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+        <button type="button" class="btn btn-primary" id="btn-next" hidden>下一題 ↵</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn" id="btn-quit">結束練習</button>
+      </div>
+    </section>
+
+    <!-- 結果 -->
+    <section id="view-result" class="view" hidden>
+      <div class="card result-card">
+        <div class="result-score" id="result-score"></div>
+        <div class="result-detail" id="result-detail"></div>
+      </div>
+      <div class="card" id="result-mistakes-card">
+        <h2>答錯的字</h2>
+        <div class="mistakes" id="result-mistakes"></div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="btn-retry-wrong">只練答錯的字</button>
+        <button type="button" class="btn" id="btn-retry">再練一次</button>
+        <button type="button" class="btn" id="btn-back">回到設定</button>
+      </div>
+    </section>
+
+    <!-- 五十音表 -->
+    <section id="view-chart" class="view" hidden>
+      <div class="chart-toolbar">
+        <div class="segmented" id="chart-script">
+          <label><input type="radio" name="chart-script" value="hira" checked><span>平假名</span></label>
+          <label><input type="radio" name="chart-script" value="kata"><span>片假名</span></label>
+        </div>
+        <label class="toggle"><input type="checkbox" id="chart-show-stats" checked> 顯示答對率</label>
+      </div>
+      <p class="hint">點一下字母可以聽讀音。顏色代表你過去的答對率：<span class="legend legend--good">熟練</span><span class="legend legend--mid">普通</span><span class="legend legend--bad">待加強</span></p>
+      <div id="chart"></div>
+      <div class="actions">
+        <button type="button" class="btn btn-danger" id="btn-reset-stats">清除作答紀錄</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/kana.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
