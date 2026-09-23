@@ -75,13 +75,14 @@
 
   // ---------- 畫面切換 ----------
 
-  const VIEWS = ['setup', 'quiz', 'result', 'chart'];
+  const VIEWS = ['setup', 'quiz', 'result', 'write', 'chart'];
+  const PRACTICE_VIEWS = ['setup', 'quiz', 'result'];
   let practiceView = 'setup';
 
   function showView(name) {
     for (const v of VIEWS) $('view-' + v).hidden = v !== name;
-    if (name !== 'chart') practiceView = name;
-    const tab = name === 'chart' ? 'chart' : 'setup';
+    if (PRACTICE_VIEWS.includes(name)) practiceView = name;
+    const tab = PRACTICE_VIEWS.includes(name) ? 'setup' : name;
     document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('is-active', t.dataset.view === tab));
     window.scrollTo(0, 0);
   }
@@ -91,6 +92,9 @@
       if (t.dataset.view === 'chart') {
         renderChart();
         showView('chart');
+      } else if (t.dataset.view === 'write') {
+        showView('write');
+        window.KanaWrite.show();
       } else {
         showView(practiceView);
       }
@@ -503,4 +507,6 @@
   renderRowPicker();
   updatePoolSize();
   updateCountHint();
+
+  window.KanaApp = { speak, canSpeak };
 })();
