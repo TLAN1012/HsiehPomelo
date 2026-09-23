@@ -75,7 +75,7 @@
 
   // ---------- 畫面切換 ----------
 
-  const VIEWS = ['setup', 'quiz', 'result', 'write', 'chart'];
+  const VIEWS = ['setup', 'quiz', 'result', 'write', 'numbers', 'chart'];
   const PRACTICE_VIEWS = ['setup', 'quiz', 'result'];
   let practiceView = 'setup';
 
@@ -95,6 +95,9 @@
       } else if (t.dataset.view === 'write') {
         showView('write');
         window.KanaWrite.show();
+      } else if (t.dataset.view === 'numbers') {
+        showView('numbers');
+        window.KanaNumbersView.show();
       } else {
         showView(practiceView);
       }

@@ -9,10 +9,11 @@
 </head>
 <body>
   <header class="topbar">
-    <h1 class="brand"><span lang="ja">かな</span> 假名練習</h1>
+    <h1 class="brand"><span lang="ja">かな</span><span class="brand-text"> 假名練習</span></h1>
     <nav class="tabs" role="tablist">
       <button type="button" class="tab is-active" data-view="setup" role="tab">練習</button>
       <button type="button" class="tab" data-view="write" role="tab">習字帖</button>
+      <button type="button" class="tab" data-view="numbers" role="tab">數字</button>
       <button type="button" class="tab" data-view="chart" role="tab">五十音表</button>
     </nav>
   </header>
@@ -123,7 +124,13 @@
         <div class="write-head">
           <button type="button" class="btn-nav" id="write-prev" aria-label="上一個字">‹</button>
           <div class="write-info">
-            <span class="write-kana" id="write-kana" lang="ja"></span>
+            <div class="write-glyphs">
+              <span class="write-kana" id="write-kana" lang="ja"></span>
+              <span class="write-origin" id="write-origin">
+                <span class="write-origin-kanji" id="write-origin-kanji" lang="ja"></span>
+                <span class="write-origin-label">字源</span>
+              </span>
+            </div>
             <span class="write-meta" id="write-meta"></span>
           </div>
           <button type="button" class="btn-nav" id="write-next" aria-label="下一個字">›</button>
@@ -145,6 +152,7 @@
         <div class="write-options">
           <label class="toggle"><input type="checkbox" id="write-guide" checked> 顯示描紅範本</label>
           <label class="toggle"><input type="checkbox" id="write-numbers"> 顯示筆畫編號</label>
+          <label class="toggle"><input type="checkbox" id="write-show-origin" checked> 顯示字源漢字</label>
           <label class="toggle"><input type="checkbox" id="write-autospeak" checked> 換字時自動唸出讀音</label>
         </div>
       </div>
@@ -160,9 +168,41 @@
           </select>
           <button type="button" class="btn btn-primary" id="btn-print">列印</button>
         </div>
-        <p class="hint">每個字一行：第 1 格是標有筆順的範本，接著 3 格淡色描紅，其餘空白格自由練習。</p>
+        <p class="hint">每個字一行：第 1 格是標有筆順與字源漢字的範本，接著 3 格淡色描紅，其餘空白格自由練習。</p>
       </div>
       <p class="credit">筆順資料來自 <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">KanjiVG</a>（CC BY-SA 3.0）</p>
+    </section>
+
+    <!-- 數字 -->
+    <section id="view-numbers" class="view" hidden>
+      <div class="card num-card">
+        <div id="num-detail">
+          <div class="num-main">
+            <span class="num-digit" id="num-digit"></span>
+            <span class="num-kanji" id="num-kanji" lang="ja"></span>
+          </div>
+          <div class="num-reading">
+            <span class="num-kana" id="num-kana" lang="ja"></span>
+            <span class="num-romaji" id="num-romaji"></span>
+            <button type="button" class="btn-icon-inline" id="num-speak" aria-label="唸出讀音">🔊</button>
+          </div>
+          <div class="num-alt" id="num-alt" hidden>
+            也唸 <span id="num-alt-kana" lang="ja"></span>
+            （<span id="num-alt-romaji"></span>）
+            <button type="button" class="btn-icon-inline" id="num-alt-speak" aria-label="唸出另一種讀音">🔊</button>
+          </div>
+        </div>
+        <div id="num-quiz" hidden>
+          <div class="num-quiz-score" id="num-quiz-score"></div>
+          <div class="num-quiz-feedback" id="num-quiz-feedback" aria-live="polite"></div>
+          <button type="button" class="btn" id="num-quiz-replay">🔊 再聽一次</button>
+        </div>
+      </div>
+      <div class="num-grid" id="num-grid"></div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="num-quiz-start">🎧 聽音測驗</button>
+      </div>
+      <p class="hint num-hint">點數字聽讀音。4、7、9 各有兩種讀法，數數時通常用よん、なな、きゅう。</p>
     </section>
 
     <!-- 五十音表 -->
@@ -188,5 +228,6 @@
   <script src="js/strokes.js?v=dev"></script>
   <script src="js/app.js?v=dev"></script>
   <script src="js/write.js?v=dev"></script>
+  <script src="js/numbers.js?v=dev"></script>
 </body>
 </html>

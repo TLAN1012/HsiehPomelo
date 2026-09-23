@@ -52,6 +52,35 @@
 
   const SCRIPTS = { hira: '平假名', kata: '片假名' };
 
+  // 字源：平假名由漢字草書簡化而來，片假名取自漢字的一部分
+  const HIRA_ORIGIN = {
+    あ: '安', い: '以', う: '宇', え: '衣', お: '於',
+    か: '加', き: '幾', く: '久', け: '計', こ: '己',
+    さ: '左', し: '之', す: '寸', せ: '世', そ: '曾',
+    た: '太', ち: '知', つ: '川', て: '天', と: '止',
+    な: '奈', に: '仁', ぬ: '奴', ね: '禰', の: '乃',
+    は: '波', ひ: '比', ふ: '不', へ: '部', ほ: '保',
+    ま: '末', み: '美', む: '武', め: '女', も: '毛',
+    や: '也', ゆ: '由', よ: '與',
+    ら: '良', り: '利', る: '留', れ: '禮', ろ: '呂',
+    わ: '和', を: '遠', ん: '无',
+  };
+  // 以平假名為鍵，對應片假名的字源
+  const KATA_ORIGIN = {
+    あ: '阿', い: '伊', う: '宇', え: '江', お: '於',
+    か: '加', き: '幾', く: '久', け: '介', こ: '己',
+    さ: '散', し: '之', す: '須', せ: '世', そ: '曾',
+    た: '多', ち: '千', つ: '川', て: '天', と: '止',
+    な: '奈', に: '仁', ぬ: '奴', ね: '禰', の: '乃',
+    は: '八', ひ: '比', ふ: '不', へ: '部', ほ: '保',
+    ま: '末', み: '三', む: '牟', め: '女', も: '毛',
+    や: '也', ゆ: '由', よ: '與',
+    ら: '良', り: '利', る: '流', れ: '禮', ろ: '呂',
+    わ: '和', を: '乎', ん: '尓',
+  };
+  // 字源說法不一的字
+  const ORIGIN_NOTES = { ン: '字源說法不一' };
+
   function toKatakana(str) {
     return str.replace(/[ぁ-ゖ]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) + 0x60));
   }
@@ -86,6 +115,16 @@
       CONFUSABLES[ch] = CONFUSABLES[ch] || new Set();
       for (const other of group) if (other !== ch) CONFUSABLES[ch].add(other);
     }
+  }
+
+  // 回傳 { kanji, note } 或 null；濁音、半濁音沿用清音的字源
+  function originOf(kana) {
+    if ([...kana].length !== 1) return null;
+    const isKata = /[\u30A1-\u30F6]/.test(kana);
+    const plain = kana.normalize('NFD')[0];
+    const hira = isKata ? String.fromCharCode(plain.charCodeAt(0) - 0x60) : plain;
+    const kanji = (isKata ? KATA_ORIGIN : HIRA_ORIGIN)[hira];
+    return kanji ? { kanji, note: ORIGIN_NOTES[kana.normalize('NFD')[0]] || '' } : null;
   }
 
   function normalizeRomaji(input) {
@@ -157,7 +196,7 @@
 
   const Kana = {
     GROUPS, ROWS, SCRIPTS, ALL_ITEMS,
-    toKatakana, rowLabel, normalizeRomaji, checkAnswer, shareRomaji,
+    toKatakana, rowLabel, originOf, normalizeRomaji, checkAnswer, shareRomaji,
     buildPool, shuffle, itemWeight, pickWeighted, makeChoices,
   };
 
