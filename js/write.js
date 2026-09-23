@@ -18,7 +18,7 @@
     }
   }
 
-  const state = { script: 'hira', base: 'あ', guide: true, numbers: false };
+  const state = { script: 'hira', base: 'あ', guide: true, numbers: false, autoSpeak: true };
   try {
     Object.assign(state, JSON.parse(localStorage.getItem(STATE_KEY) || '{}'));
   } catch (e) { /* 使用預設值 */ }
@@ -99,6 +99,12 @@
     state.base = base;
     saveState();
     render();
+    speakCurrent();
+  }
+
+  // 換字時自動唸出讀音（由使用者操作觸發，瀏覽器才允許發聲）
+  function speakCurrent() {
+    if (state.autoSpeak && !$('view-write').hidden) window.KanaApp.speak(display(state.base));
   }
 
   function step(delta) {
@@ -333,6 +339,7 @@
       saveState();
       renderRowSelect();
       render();
+      speakCurrent();
     });
   });
 
@@ -348,6 +355,12 @@
     renderGuide();
   });
   $('write-numbers').checked = state.numbers;
+  $('write-autospeak').checked = state.autoSpeak;
+  $('write-autospeak').addEventListener('change', (e) => {
+    state.autoSpeak = e.target.checked;
+    saveState();
+    speakCurrent();
+  });
   $('write-numbers').addEventListener('change', (e) => {
     state.numbers = e.target.checked;
     saveState();
@@ -363,6 +376,7 @@
     redraw();
   });
   $('write-speak').hidden = !window.KanaApp.canSpeak;
+  if (!window.KanaApp.canSpeak) $('write-autospeak').closest('label').hidden = true;
   $('write-speak').addEventListener('click', () => window.KanaApp.speak(display(state.base)));
 
   $('btn-print').addEventListener('click', () => {
@@ -394,6 +408,7 @@
   window.KanaWrite = {
     show() {
       setupCanvas();
+      speakCurrent();
     },
   };
 })();
