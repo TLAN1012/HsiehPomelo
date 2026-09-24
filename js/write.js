@@ -18,7 +18,7 @@
     }
   }
 
-  const state = { script: 'hira', base: 'あ', guide: true, numbers: false, autoSpeak: true };
+  const state = { script: 'hira', base: 'あ', guide: true, numbers: false, autoSpeak: true, showOrigin: true };
   try {
     Object.assign(state, JSON.parse(localStorage.getItem(STATE_KEY) || '{}'));
   } catch (e) { /* 使用預設值 */ }
@@ -117,8 +117,13 @@
   function renderInfo() {
     const item = current();
     const ch = display(item.base);
+    const origin = Kana.originOf(ch);
     $('write-kana').textContent = ch;
-    $('write-meta').textContent = `${item.romaji} · ${STROKES[ch].d.length} 畫`;
+    $('write-origin-kanji').textContent = origin ? origin.kanji : '';
+    $('write-origin').hidden = !origin || !state.showOrigin;
+    $('write-origin').title = origin ? `${ch} 源自漢字「${origin.kanji}」${origin.note ? `（${origin.note}）` : ''}` : '';
+    const note = origin && origin.note && state.showOrigin ? ` · ${origin.note}` : '';
+    $('write-meta').textContent = `${item.romaji} · ${STROKES[ch].d.length} 畫${note}`;
   }
 
   function renderSteps() {
@@ -317,6 +322,8 @@
         if (i === 0) {
           for (const d of STROKES[ch].d) svgEl('path', { d, class: 'ps-model' }, svg);
           drawNumbers(svg, ch, 'ps-num');
+          const origin = Kana.originOf(ch);
+          if (origin) svgEl('text', { x: SIZE - 4, y: SIZE - 5, class: 'ps-origin' }, svg).textContent = origin.kanji;
         } else if (i <= TRACE_BOXES) {
           for (const d of STROKES[ch].d) svgEl('path', { d, class: 'ps-trace' }, svg);
         }
@@ -353,6 +360,12 @@
     state.guide = e.target.checked;
     saveState();
     renderGuide();
+  });
+  $('write-show-origin').checked = state.showOrigin;
+  $('write-show-origin').addEventListener('change', (e) => {
+    state.showOrigin = e.target.checked;
+    saveState();
+    renderInfo();
   });
   $('write-numbers').checked = state.numbers;
   $('write-autospeak').checked = state.autoSpeak;
