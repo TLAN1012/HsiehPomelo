@@ -682,8 +682,247 @@ select {
 
 @media (max-width: 420px) {
   .brand { font-size: 1rem; }
-  .tab { padding: 6px 10px; }
   .card { padding: 14px; }
   .chart-kana { font-size: 1.4rem; }
   .write-char { font-size: 1.3rem; }
+}
+
+/* =====================================================================
+ * 第一階段：底部分頁、今天首頁、文旦樹、貼紙簿、口訣卡、鼓勵動畫
+ * 以手機／平板為主：拇指搆得到的底部分頁，作答時隱藏分頁專心作答
+ * ===================================================================== */
+
+:root { --nav-h: 64px; --fruit: #c9d24a; --fruit-2: #e9c84a; --leaf: #7fb069; --leaf-2: #a3c985; --trunk: #8a6a4a; --gold: #e0b43a; }
+@media (prefers-color-scheme: dark) {
+  :root { --leaf: #4f7a45; --leaf-2: #6b9460; --trunk: #6d5238; }
+}
+
+main { padding-bottom: calc(var(--nav-h) + 32px + env(safe-area-inset-bottom)); }
+.topbar { justify-content: center; padding-top: max(10px, env(safe-area-inset-top)); }
+
+.tabs {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  padding: 6px max(8px, calc((100% - 720px) / 2)) calc(6px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+}
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 0;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  min-height: 48px;
+}
+.tab-icon { font-size: 1.35rem; line-height: 1.2; }
+.tab.is-active { background: var(--accent-soft); color: var(--accent); }
+body.in-quiz .tabs { display: none; }
+body.in-quiz main { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+/* ---------- 今天 ---------- */
+
+.home-hello { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.home-greet { font-size: 1.35rem; font-weight: 700; }
+.home-streak { color: var(--muted); margin-top: 2px; }
+.goal-ring {
+  --p: 0;
+  flex: none;
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background:
+    radial-gradient(closest-side, var(--surface) 76%, transparent 78%),
+    conic-gradient(var(--good) calc(var(--p) * 360deg), var(--surface-2) 0);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.btn-lesson {
+  width: 100%;
+  font-size: 1.25rem;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.home-sub { text-align: center; color: var(--muted); font-size: 0.88rem; margin: 8px 0 16px; }
+
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.day-name { font-size: 0.75rem; color: var(--muted); }
+.day-stamp {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  border: 2px dashed var(--border);
+  font-size: 1.05rem;
+}
+.day-stamp.is-done { border-style: solid; border-color: var(--leaf-2); background: color-mix(in srgb, var(--leaf-2) 20%, transparent); }
+.day-stamp.is-goal { border-style: solid; border-color: var(--gold); background: color-mix(in srgb, var(--gold) 22%, transparent); }
+.day.is-today .day-name { color: var(--accent); font-weight: 700; }
+
+.tree-card { text-align: center; }
+.tree { width: 100%; max-width: 210px; height: auto; display: block; margin: 0 auto; }
+.tree-ground { fill: color-mix(in srgb, var(--leaf-2) 35%, transparent); }
+.tree-trunk { fill: var(--trunk); }
+.tree-leaves { fill: var(--leaf); }
+.tree-leaves--light { fill: var(--leaf-2); opacity: 0.55; }
+.tree-fruit { fill: var(--fruit); stroke: color-mix(in srgb, var(--fruit) 60%, #5a6a1a); stroke-width: 0.8; }
+.tree-fruit-shine { fill: #fff; opacity: 0.6; }
+.tree-flower { fill: #fff; stroke: #f3d36b; stroke-width: 1.4; }
+.tree-caption { margin: 6px 0 0; font-weight: 600; }
+.home-progress { text-align: center; }
+
+.sticker-entry {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  font: inherit; color: var(--text); text-align: left; cursor: pointer;
+}
+.sticker-entry-icon { font-size: 2rem; }
+.sticker-entry-text { flex: 1; display: flex; flex-direction: column; font-weight: 700; }
+.sticker-entry-text small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.sticker-entry-count { color: var(--accent); font-weight: 700; }
+
+.home-settings summary { cursor: pointer; font-weight: 600; color: var(--muted); }
+.home-settings[open] summary { margin-bottom: 4px; }
+
+/* ---------- 貼紙簿 ---------- */
+
+.sub-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.sub-head h2 { margin: 0; font-size: 1.2rem; }
+.sticker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 10px; margin-top: 12px; }
+.sticker {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  padding: 0; overflow: hidden; cursor: pointer;
+}
+.sticker img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sticker.is-got { border-color: var(--leaf-2); background: var(--surface); }
+.sticker.is-gold { border: 3px solid var(--gold); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 30%, transparent); }
+.sticker-kana {
+  position: absolute; left: 4px; bottom: 4px;
+  font-size: 1.1rem; line-height: 1;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  border-radius: 8px; padding: 3px 6px;
+}
+.sticker-lock { font-size: 1.6rem; color: var(--border); font-weight: 700; }
+.sticker:disabled { cursor: default; }
+
+/* ---------- 作答 ---------- */
+
+.quiz-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.quiz-top .progress { flex: 1; margin: 0; height: 10px; }
+.btn-quit {
+  flex: none; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  font-size: 1rem; cursor: pointer;
+}
+.quiz-count { font-size: 0.85rem; color: var(--muted); min-width: 3.2em; text-align: right; }
+.combo {
+  font-weight: 700; color: #d9480f;
+  background: #fff1e6; border-radius: 999px; padding: 2px 8px; font-size: 0.85rem;
+}
+@media (prefers-color-scheme: dark) { .combo { background: #4a2b1a; color: #ffa06b; } }
+
+.prompt--listen { font-size: clamp(4rem, 20vw, 6rem); cursor: pointer; }
+.prompt--word { font-size: clamp(3.2rem, 15vw, 5rem); }
+.prompt--intro { margin-bottom: 4px; }
+.prompt.is-pop { animation: pop 0.45s ease; }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+.choice { min-height: 64px; }
+.choice--meaning { font-size: 1.15rem; }
+.choice--word { font-size: 1.7rem; }
+.choice.is-wrong { border-color: var(--mid); background: var(--mid-soft); }
+.feedback.is-near .feedback-mark { color: var(--mid); }
+.feedback .mn { margin-top: 10px; }
+
+.intro { margin-bottom: 8px; }
+.intro-romaji { font-size: 1.6rem; color: var(--muted); margin-bottom: 10px; }
+#btn-next { min-width: 60%; padding: 14px; font-size: 1.1rem; border-radius: 14px; }
+
+.mn {
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 10px;
+  max-width: 420px; margin: 0 auto;
+}
+.mn-img { width: 96px; height: 96px; border-radius: 12px; flex: none; object-fit: cover; background: var(--surface); }
+.mn--compact .mn-img { width: 64px; height: 64px; }
+.mn-line { font-size: 1.05rem; font-weight: 600; }
+.mn-note { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+.burst {
+  position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 64px);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  z-index: 40;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-size: 1.1rem; font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+.burst.is-on { animation: burst 1.6s ease forwards; }
+@keyframes burst {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  25% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+}
+
+/* ---------- 結果 ---------- */
+
+.result-emoji { font-size: 4rem; line-height: 1.1; }
+.result-title { font-size: 1.8rem; font-weight: 800; margin-top: 4px; }
+.result-card .result-score { font-size: 1.1rem; font-weight: 600; color: var(--muted); margin-top: 4px; }
+.gains { display: grid; gap: 8px; margin-top: 16px; text-align: left; }
+.gain { display: flex; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
+.gain-icon { font-size: 1.4rem; }
+#view-result .actions { flex-direction: column; }
+#view-result .actions .btn { width: 100%; padding: 14px; }
+
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+.confetti-bit { position: absolute; top: -40px; animation: fall 2.6s ease-in forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+
+/* ---------- 口訣彈出卡 ---------- */
+
+.sheet {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet-panel {
+  width: 100%; max-width: 520px;
+  background: var(--surface);
+  border-radius: 22px 22px 0 0;
+  padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+  animation: up 0.22s ease;
+}
+@keyframes up { from { transform: translateY(40px); opacity: 0; } }
+.sheet-head { display: flex; align-items: baseline; justify-content: center; gap: 14px; margin-bottom: 12px; }
+.sheet-kana { font-size: 4rem; line-height: 1; }
+.sheet-romaji { font-size: 1.4rem; color: var(--muted); }
+.sheet .mn-img { width: 120px; height: 120px; }
+.sheet-level { text-align: center; color: var(--muted); margin: 10px 0 0; }
+.sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.sheet-actions .btn { padding: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt.is-pop, .burst.is-on, .confetti-bit, .sheet-panel { animation: none; }
 }

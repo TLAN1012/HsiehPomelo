@@ -2,7 +2,9 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f4ef">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%8D%88%3C/text%3E%3C/svg%3E">
   <title>假名練習</title>
   <meta name="description" content="日文平假名、片假名字母練習">
   <link rel="stylesheet" href="css/style.css?v=dev">
@@ -10,17 +12,81 @@
 <body>
   <header class="topbar">
     <h1 class="brand"><span lang="ja">かな</span><span class="brand-text"> 假名練習</span></h1>
-    <nav class="tabs" role="tablist">
-      <button type="button" class="tab is-active" data-view="setup" role="tab">練習</button>
-      <button type="button" class="tab" data-view="write" role="tab">習字帖</button>
-      <button type="button" class="tab" data-view="numbers" role="tab">數字</button>
-      <button type="button" class="tab" data-view="chart" role="tab">五十音表</button>
-    </nav>
   </header>
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab is-active" data-view="home" role="tab"><span class="tab-icon">🏠</span>今天</button>
+    <button type="button" class="tab" data-view="setup" role="tab"><span class="tab-icon">✏️</span>練習</button>
+    <button type="button" class="tab" data-view="write" role="tab"><span class="tab-icon">🖌️</span>習字</button>
+    <button type="button" class="tab" data-view="numbers" role="tab"><span class="tab-icon">🔢</span>數字</button>
+    <button type="button" class="tab" data-view="chart" role="tab"><span class="tab-icon" lang="ja">あ</span>五十音</button>
+  </nav>
 
   <main>
+    <!-- 今天 -->
+    <section id="view-home" class="view">
+      <div class="card home-hello">
+        <div class="home-hello-text">
+          <div class="home-greet" id="home-greet"></div>
+          <div class="home-streak" id="home-streak"></div>
+        </div>
+        <div class="goal-ring" id="goal-ring" aria-label="今天的進度"><span id="goal-text"></span></div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-lesson" id="btn-lesson"></button>
+      <p class="home-sub" id="home-sub"></p>
+
+      <div class="card">
+        <div class="week" id="home-week" aria-label="這一週"></div>
+      </div>
+
+      <div class="card tree-card">
+        <div id="home-tree"></div>
+        <p class="tree-caption" id="tree-caption"></p>
+        <p class="hint home-progress" id="home-progress"></p>
+      </div>
+
+      <button type="button" class="card sticker-entry" id="btn-stickers">
+        <span class="sticker-entry-icon">📒</span>
+        <span class="sticker-entry-text">貼紙簿<small>每個字都有一張記憶貼紙</small></span>
+        <span class="sticker-entry-count" id="sticker-count"></span>
+      </button>
+
+      <details class="card home-settings">
+        <summary>⚙️ 設定</summary>
+        <h2>要學什麼</h2>
+        <div class="segmented">
+          <label><input type="radio" name="home-script" value="hira"><span>平假名</span></label>
+          <label><input type="radio" name="home-script" value="kata"><span>片假名</span></label>
+          <label><input type="radio" name="home-script" value="both"><span>兩個都學</span></label>
+        </div>
+        <h2>每天幾題</h2>
+        <div class="segmented">
+          <label><input type="radio" name="home-goal" value="5"><span>5 題</span></label>
+          <label><input type="radio" name="home-goal" value="10"><span>10 題</span></label>
+          <label><input type="radio" name="home-goal" value="15"><span>15 題</span></label>
+        </div>
+        <label class="toggle"><input type="checkbox" id="home-sfx"> 答對時的音效</label>
+        <p class="hint">每天最多認識 4 個新字；學過的字會在快忘記的時候自動回來複習。</p>
+      </details>
+    </section>
+
+    <!-- 貼紙簿 -->
+    <section id="view-stickers" class="view" hidden>
+      <div class="sub-head">
+        <button type="button" class="btn-nav" id="stickers-back" aria-label="回首頁">‹</button>
+        <h2>📒 貼紙簿</h2>
+      </div>
+      <div class="segmented">
+        <label><input type="radio" name="sticker-script" value="hira" checked><span>平假名</span></label>
+        <label><input type="radio" name="sticker-script" value="kata"><span>片假名</span></label>
+      </div>
+      <p class="hint" id="sticker-summary"></p>
+      <div class="sticker-grid" id="sticker-grid"></div>
+      <p class="hint">金框貼紙代表那個字已經記牢了 🍈</p>
+    </section>
+
     <!-- 設定 -->
-    <section id="view-setup" class="view">
+    <section id="view-setup" class="view" hidden>
       <div class="card">
         <h2>文字</h2>
         <div class="segmented" id="opt-script">
@@ -34,6 +100,9 @@
           <label><input type="radio" name="mode" value="type" checked><span>看假名，輸入羅馬拼音</span></label>
           <label><input type="radio" name="mode" value="pick-romaji"><span>看假名，選羅馬拼音</span></label>
           <label><input type="radio" name="mode" value="pick-kana"><span>看羅馬拼音，選假名</span></label>
+          <label><input type="radio" name="mode" value="listen"><span>🔊 聽讀音，選假名</span></label>
+          <label><input type="radio" name="mode" value="word-meaning"><span>📖 單字：看字選意思</span></label>
+          <label><input type="radio" name="mode" value="word-listen"><span>📖 單字：聽讀音選單字</span></label>
         </div>
 
         <h2>題數</h2>
@@ -64,16 +133,18 @@
 
     <!-- 作答 -->
     <section id="view-quiz" class="view" hidden>
-      <div class="quiz-status">
-        <span id="quiz-progress-text"></span>
-        <span id="quiz-score"></span>
+      <div class="quiz-top">
+        <button type="button" class="btn-quit" id="btn-quit" aria-label="結束練習">✕</button>
+        <div class="progress"><div class="progress-bar" id="quiz-progress"></div></div>
+        <span class="quiz-count" id="quiz-progress-text"></span>
+        <span class="combo" id="quiz-combo" hidden></span>
       </div>
-      <div class="progress"><div class="progress-bar" id="quiz-progress"></div></div>
 
       <div class="card quiz-card">
         <div class="prompt-tag" id="prompt-tag"></div>
         <div class="prompt" id="prompt"></div>
         <button type="button" class="btn-icon" id="btn-speak" title="唸出讀音" aria-label="唸出讀音">🔊</button>
+        <div class="intro" id="intro" hidden></div>
 
         <form id="type-form" class="type-form" autocomplete="off">
           <input id="type-input" type="text" lang="en" autocapitalize="off" autocorrect="off"
@@ -87,19 +158,19 @@
         <button type="button" class="btn btn-primary" id="btn-next" hidden>下一題 ↵</button>
       </div>
 
-      <div class="actions">
-        <button type="button" class="btn" id="btn-quit">結束練習</button>
-      </div>
+      <div class="burst" id="burst" hidden></div>
     </section>
 
     <!-- 結果 -->
     <section id="view-result" class="view" hidden>
       <div class="card result-card">
+        <div class="result-emoji" id="result-emoji"></div>
+        <div class="result-title" id="result-title"></div>
         <div class="result-score" id="result-score"></div>
-        <div class="result-detail" id="result-detail"></div>
+        <div class="gains" id="result-gains"></div>
       </div>
       <div class="card" id="result-mistakes-card">
-        <h2>答錯的字</h2>
+        <h2>再看一次這些字（點一下看口訣）</h2>
         <div class="mistakes" id="result-mistakes"></div>
       </div>
       <div class="actions">
@@ -224,7 +295,22 @@
 
   <div class="print-sheet" id="print-sheet" aria-hidden="true"></div>
 
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-panel" role="dialog" aria-label="記憶口訣">
+      <div id="sheet-body"></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn" id="sheet-speak">🔊 再聽一次</button>
+        <button type="button" class="btn btn-primary" id="sheet-close">好</button>
+      </div>
+    </div>
+  </div>
+  <div class="confetti" id="confetti" hidden aria-hidden="true"></div>
+
   <script src="js/kana.js?v=dev"></script>
+  <script src="js/srs.js?v=dev"></script>
+  <script src="js/words.js?v=dev"></script>
+  <script src="js/mnemonics.js?v=dev"></script>
+  <script src="js/progress.js?v=dev"></script>
   <script src="js/strokes.js?v=dev"></script>
   <script src="js/app.js?v=dev"></script>
   <script src="js/write.js?v=dev"></script>
