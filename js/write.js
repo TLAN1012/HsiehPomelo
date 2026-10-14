@@ -96,10 +96,14 @@
   }
 
   function select(base) {
+    setBase(base);
+    speakCurrent();
+  }
+
+  function setBase(base) {
     state.base = base;
     saveState();
     render();
-    speakCurrent();
   }
 
   // 換字時自動唸出讀音（由使用者操作觸發，瀏覽器才允許發聲）
@@ -107,9 +111,23 @@
     if (state.autoSpeak && !$('view-write').hidden) window.KanaApp.speak(display(state.base));
   }
 
+  // 用 ‹ › 或鍵盤左右鍵換字：唸讀音、播放筆順、播完再唸一次，然後清掉示範讓你開始寫
   function step(delta) {
     const i = (currentIndex() + delta + SEQUENCE.length) % SEQUENCE.length;
-    select(SEQUENCE[i].base);
+    setBase(SEQUENCE[i].base);
+    demonstrate();
+  }
+
+  async function demonstrate() {
+    speakCurrent();
+    const finished = await playStrokes({ autoClear: false });
+    if (!finished) return;
+    const token = animToken;
+    speakCurrent();
+    await new Promise((r) => setTimeout(r, 900));
+    if (token !== animToken) return;
+    $('pad-anim').textContent = '';
+    clearInk();
   }
 
   // ---------- 範本與筆順 ----------
@@ -164,13 +182,14 @@
     svgEl('g', { id: 'pad-anim' }, svg);
   }
 
-  async function playStrokes() {
+  // 播放完畢回傳 true；中途被換字、重播或開始書寫打斷則回傳 false
+  async function playStrokes({ autoClear = true } = {}) {
     const token = ++animToken;
     const ch = display(state.base);
     const layer = $('pad-anim');
     layer.textContent = '';
     for (const d of STROKES[ch].d) {
-      if (token !== animToken) return;
+      if (token !== animToken) return false;
       const path = svgEl('path', { d, class: 'g-anim' }, layer);
       const len = path.getTotalLength();
       path.style.strokeDasharray = `${len}`;
@@ -182,13 +201,20 @@
       try {
         await anim.finished;
       } catch (e) {
-        return;
+        return false;
       }
       await new Promise((r) => setTimeout(r, 180));
     }
-    if (token === animToken) {
-      setTimeout(() => { if (token === animToken) layer.textContent = ''; }, 1200);
-    }
+    if (token !== animToken) return false;
+    if (autoClear) setTimeout(() => { if (token === animToken) layer.textContent = ''; }, 1200);
+    return true;
+  }
+
+  // 開始書寫時停止筆順示範，避免示範結束時清掉剛寫的字
+  function stopDemo() {
+    animToken++;
+    const layer = $('pad-anim');
+    if (layer) layer.textContent = '';
   }
 
   // ---------- 手寫板 ----------
@@ -244,6 +270,7 @@
   canvas.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
     e.preventDefault();
+    stopDemo();
     canvas.setPointerCapture(e.pointerId);
     drawing = { id: e.pointerId, points: [pointFrom(e)] };
     ink.push(drawing.points);
@@ -382,7 +409,7 @@
 
   $('write-prev').addEventListener('click', () => step(-1));
   $('write-next').addEventListener('click', () => step(1));
-  $('write-play').addEventListener('click', playStrokes);
+  $('write-play').addEventListener('click', () => playStrokes());
   $('write-clear').addEventListener('click', clearInk);
   $('write-undo').addEventListener('click', () => {
     ink.pop();
