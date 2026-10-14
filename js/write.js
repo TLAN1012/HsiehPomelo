@@ -18,10 +18,13 @@
     }
   }
 
-  const state = { script: 'hira', base: 'あ', guide: true, numbers: false, autoSpeak: true, showOrigin: true };
+  const state = { script: 'hira', base: 'あ', guide: true, numbers: false, autoPlay: undefined, showOrigin: true };
   try {
     Object.assign(state, JSON.parse(localStorage.getItem(STATE_KEY) || '{}'));
   } catch (e) { /* 使用預設值 */ }
+  // 舊版的「換字時自動唸出讀音」設定沿用為「自動播放」
+  if (state.autoPlay === undefined) state.autoPlay = state.autoSpeak !== false;
+  delete state.autoSpeak;
   if (!SEQUENCE.some((s) => s.base === state.base)) state.base = 'あ';
 
   function saveState() {
@@ -97,7 +100,7 @@
 
   function select(base) {
     setBase(base);
-    speakCurrent();
+    autoPlay();
   }
 
   function setBase(base) {
@@ -106,24 +109,24 @@
     render();
   }
 
-  // 換字時自動唸出讀音（由使用者操作觸發，瀏覽器才允許發聲）
-  function speakCurrent() {
-    if (state.autoSpeak && !$('view-write').hidden) window.KanaApp.speak(display(state.base));
-  }
-
-  // 用 ‹ › 或鍵盤左右鍵換字：唸讀音、播放筆順、播完再唸一次，然後清掉示範讓你開始寫
   function step(delta) {
     const i = (currentIndex() + delta + SEQUENCE.length) % SEQUENCE.length;
-    setBase(SEQUENCE[i].base);
-    demonstrate();
+    select(SEQUENCE[i].base);
   }
 
+  // 換字時若開啟「自動播放」，就示範這個字（由使用者操作觸發，瀏覽器才允許發聲）
+  function autoPlay() {
+    if (state.autoPlay && !$('view-write').hidden) demonstrate();
+  }
+
+  // 示範：唸讀音、播放筆順、播完再唸一次，然後清掉示範讓你開始寫
   async function demonstrate() {
-    speakCurrent();
+    const speak = () => window.KanaApp.speak(display(state.base));
+    speak();
     const finished = await playStrokes({ autoClear: false });
     if (!finished) return;
     const token = animToken;
-    speakCurrent();
+    speak();
     await new Promise((r) => setTimeout(r, 900));
     if (token !== animToken) return;
     $('pad-anim').textContent = '';
@@ -373,7 +376,7 @@
       saveState();
       renderRowSelect();
       render();
-      speakCurrent();
+      autoPlay();
     });
   });
 
@@ -395,11 +398,11 @@
     renderInfo();
   });
   $('write-numbers').checked = state.numbers;
-  $('write-autospeak').checked = state.autoSpeak;
-  $('write-autospeak').addEventListener('change', (e) => {
-    state.autoSpeak = e.target.checked;
+  $('write-autoplay').checked = state.autoPlay;
+  $('write-autoplay').addEventListener('change', (e) => {
+    state.autoPlay = e.target.checked;
     saveState();
-    speakCurrent();
+    if (!state.autoPlay) stopDemo();
   });
   $('write-numbers').addEventListener('change', (e) => {
     state.numbers = e.target.checked;
@@ -416,7 +419,6 @@
     redraw();
   });
   $('write-speak').hidden = !window.KanaApp.canSpeak;
-  if (!window.KanaApp.canSpeak) $('write-autospeak').closest('label').hidden = true;
   $('write-speak').addEventListener('click', () => window.KanaApp.speak(display(state.base)));
 
   $('btn-print').addEventListener('click', () => {
@@ -448,7 +450,7 @@
   window.KanaWrite = {
     show() {
       setupCanvas();
-      speakCurrent();
+      autoPlay();
     },
   };
 })();
