@@ -147,6 +147,58 @@
     $('write-meta').textContent = `${item.romaji} · ${STROKES[ch].d.length} 畫${note}`;
   }
 
+  // 例詞：漢字上方標注假名，詞裡的目標假名特別標色；按了才唸
+  function renderWord() {
+    const ch = display(state.base);
+    const e = window.KanaExamples.exampleOf(ch);
+    const text = $('write-word-text');
+    text.textContent = '';
+    $('write-word-meaning').textContent = '';
+    const hasWord = Boolean(e && e.w);
+    text.hidden = !hasWord;
+    $('write-word-meaning').hidden = !hasWord;
+    $('write-word-speak').hidden = !hasWord || !window.KanaApp.canSpeak;
+    $('write-word').hidden = !e;
+    $('write-word-note').textContent = (e && e.note) || '';
+    $('write-word-note').hidden = !(e && e.note);
+    if (!hasWord) return;
+
+    const highlight = (str, parent) => {
+      str.split(ch).forEach((part, i) => {
+        if (i > 0) {
+          const mark = document.createElement('mark');
+          mark.className = 'word-hit';
+          mark.textContent = ch;
+          parent.appendChild(mark);
+        }
+        if (part) parent.appendChild(document.createTextNode(part));
+      });
+    };
+    for (const [part, ruby] of e.w) {
+      if (ruby) {
+        const r = document.createElement('ruby');
+        r.appendChild(document.createTextNode(part));
+        const rt = document.createElement('rt');
+        highlight(ruby, rt);
+        r.appendChild(rt);
+        text.appendChild(r);
+      } else {
+        highlight(part, text);
+      }
+    }
+    const surface = e.w.map(([part]) => part).join('');
+    const reading = window.KanaExamples.readingOf(e);
+    const label = surface === reading ? surface : `${surface}（${reading}）`;
+    text.setAttribute('aria-label', `例詞 ${label}，${e.m}。點一下聽讀音`);
+    $('write-word-meaning').textContent = e.m;
+  }
+
+  function speakWord() {
+    const e = window.KanaExamples.exampleOf(display(state.base));
+    const reading = window.KanaExamples.readingOf(e);
+    if (reading) window.KanaApp.speak(reading);
+  }
+
   function renderSteps() {
     const ch = display(state.base);
     const wrap = $('stroke-steps');
@@ -420,6 +472,8 @@
   });
   $('write-speak').hidden = !window.KanaApp.canSpeak;
   $('write-speak').addEventListener('click', () => window.KanaApp.speak(display(state.base)));
+  $('write-word-text').addEventListener('click', speakWord);
+  $('write-word-speak').addEventListener('click', speakWord);
 
   $('btn-print').addEventListener('click', () => {
     buildPrintSheet($('print-scope').value);
@@ -439,6 +493,7 @@
     $('write-row').value = current().row.id;
     renderCharButtons();
     renderInfo();
+    renderWord();
     renderSteps();
     renderGuide();
     clearInk();

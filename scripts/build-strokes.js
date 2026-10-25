@@ -22,7 +22,12 @@ const chars = [...new Set(Kana.ALL_ITEMS.filter((it) => it.group !== 'yoon').map
 
 fs.mkdirSync(cacheDir, { recursive: true });
 
-const round = (s) => s.replace(/-?\d+\.\d+/g, (n) => String(Math.round(parseFloat(n) * 10) / 10));
+// 座標四捨五入到小數一位。KanjiVG 用負號兼當分隔符號（例如「20.25-0.02」），
+// 負數四捨五入成 0 時負號會消失，所以補一個空白，避免和前一個數字黏在一起。
+const round = (s) => s.replace(/-?\d+\.\d+/g, (n) => {
+  const v = String(Math.round(parseFloat(n) * 10) / 10);
+  return n[0] === '-' && v[0] !== '-' ? ' ' + v : v;
+});
 
 const data = {};
 for (const ch of chars) {
