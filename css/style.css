@@ -507,6 +507,35 @@ select {
   cursor: pointer;
 }
 
+.write-word {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+  margin: 12px auto 0;
+  padding: 8px 14px;
+  max-width: 380px;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+.write-word-label { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.write-word-text {
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-family: var(--font-ja);
+  font-size: 1.8rem;
+  line-height: 1.9;
+  padding: 0 2px;
+  cursor: pointer;
+}
+.write-word-text rt { font-size: 0.45em; color: var(--muted); }
+.word-hit { background: none; color: var(--accent); font-weight: 700; }
+.write-word-text rt .word-hit { color: var(--accent); }
+.write-word-meaning { font-size: 0.95rem; color: var(--muted); }
+.write-word-note { flex-basis: 100%; margin: 0; font-size: 0.8rem; color: var(--muted); text-align: center; }
+
 .stroke-steps {
   display: flex;
   justify-content: center;

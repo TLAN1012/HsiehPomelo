@@ -19,3 +19,27 @@ test('常見字的筆畫數', () => {
   const expected = { あ: 3, い: 2, し: 1, そ: 1, ぬ: 2, ん: 1, ア: 2, シ: 3, ツ: 3, ヲ: 3, ガ: 4, ぱ: 4 };
   for (const [ch, n] of Object.entries(expected)) assert.equal(STROKES[ch].d.length, n, ch);
 });
+
+test('每一筆的 SVG path 格式正確（每個指令的數字個數對得上）', () => {
+  const need = { M: 2, m: 2, L: 2, l: 2, C: 6, c: 6, S: 4, s: 4, Q: 4, q: 4, T: 2, t: 2, H: 1, h: 1, V: 1, v: 1 };
+  for (const [ch, s] of Object.entries(STROKES)) {
+    s.d.forEach((d, i) => {
+      const tokens = d.match(/[A-Za-z]|-?(?:\d+\.?\d*|\.\d+)/g);
+      let cmd = null;
+      let count = 0;
+      const check = () => {
+        if (cmd && need[cmd]) assert.equal(count % need[cmd], 0, `${ch} 第 ${i + 1} 畫：${d}`);
+      };
+      for (const t of tokens) {
+        if (/[A-Za-z]/.test(t)) {
+          check();
+          cmd = t;
+          count = 0;
+        } else {
+          count++;
+        }
+      }
+      check();
+    });
+  }
+});
